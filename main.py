@@ -1,6 +1,22 @@
+from selenium import webdriver
+
 import data
 import helpers
 class TestUrbanRoutes:
+    @classmethod
+    def setup_class(cls):
+        from selenium.webdriver import DesiredCapabilities
+        capabilities = DesiredCapabilities.CHROME
+        capabilities["goog:loggingPrefs"] = {'performance': 'ALL'}
+        cls.driver = webdriver.Chrome()
+        url = data.URBAN_ROUTES_URL
+
+        # Check if the server is reachable
+        if helpers.is_url_reachable(url):
+            print("Connected to the Urban Routes server")
+        else:
+            print("Cannot connect to Urban Routes. Check the server is on and still running")
+            pass
 
     def test_set_route(self):
         # Add in S8
@@ -45,18 +61,8 @@ class TestUrbanRoutes:
         pass
 
     @classmethod
-    def test_setup_class(cls):
-        # Add in S8
-        # Urban Routes URL from data.py
-        url = data.URBAN_ROUTES_URL
-
-        # Check if the server is reachable
-        if helpers.is_url_reachable(url):
-            print("Connected to the Urban Routes server")
-        else:
-            print("Cannot connect to Urban Routes. Check the server is on and still running")
-            pass
-
+    def teardown_class(cls):
+        cls.driver.quit()
 
 
 
