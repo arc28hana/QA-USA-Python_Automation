@@ -1,5 +1,8 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support import expected_conditions
+from selenium.webdriver.support.wait import WebDriverWait
+from helpers import retrieve_phone_code
 
 # Defining the page class, locators and method in the class
 class UrbanRoutesPage:
@@ -14,6 +17,8 @@ class UrbanRoutesPage:
     PHONE_NUMBER_LOCATOR = (By.CLASS_NAME, 'np-text')
     PHONE_NUMBER_INPUT = (By.ID, 'phone')
     SMS_CODE_INPUT = (By.ID, 'code')
+
+
      # Credit card
     CASH_LOCATOR = (By.CLASS_NAME, 'pp-value-text')
     PAYMENT_CARD_OPTION_LOCATOR = (By.CLASS_NAME, 'pp-plus')
@@ -54,6 +59,7 @@ class UrbanRoutesPage:
         return self.driver.find_element(*self.TO_LOCATOR).get_property('value')
 
     def click_call_taxi_button(self):
+       WebDriverWait(self.driver, 3).until(expected_conditions.visibility_of_element_located(self.CALL_TAXI_BUTTON))
        call_taxi_button = self.driver.find_element(*self.CALL_TAXI_BUTTON)
        call_taxi_button.click()
 
@@ -61,8 +67,6 @@ class UrbanRoutesPage:
         self.set_from(from_address)
         self.set_to(to_address)
         self.click_call_taxi_button()
-
-
 
     def select_supportive_plan(self):
         select_supportive_plan_button = self.driver.find_element(*self.SUPPORTIVE_PLAN_CARD)
@@ -80,13 +84,14 @@ class UrbanRoutesPage:
         phone_number_field.send_keys(phone_number)
         phone_number_field.send_keys(Keys.RETURN)   # Submit the phone number
 
-    def enter_sms_code(self, sms_code):
+    def enter_sms_code(self):
         sms_code_field = self.driver.find_element(*self.SMS_CODE_INPUT)
-        sms_code_field.send_keys(sms_code)
+        sms_code_field.send_keys(retrieve_phone_code(self.driver))
         sms_code_field.send_keys(Keys.RETURN)  # Submit the SMS code
 
     def get_phone_number(self):
         return self.driver.find_element(*self.PHONE_NUMBER_LOCATOR).get_property('textContent')
+
 
     def click_cash_option(self):
         cash_option = self.driver.find_element(*self.CASH_LOCATOR)

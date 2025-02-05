@@ -40,7 +40,7 @@ class TestUrbanRoutes:
         routes_page.click_phone_number()
         routes_page.enter_phone_number(data.PHONE_NUMBER)
         time.sleep(2)
-        routes_page.enter_sms_code(helpers.retrieve_phone_code(self.driver))
+        routes_page.enter_sms_code()
         assert routes_page.get_phone_number() == data.PHONE_NUMBER
 
     def test_fill_card(self):
